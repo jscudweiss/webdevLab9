@@ -1,0 +1,21 @@
+:root {
+    /* CSS HEX */
+    --imperial-red: #e63946ff;
+    --honeydew: #f1faeeff;
+    --powder-blue: #a8dadcff;
+    --celadon-blue: #457b9dff;
+    --prussian-blue: #1d3557ff;
+}
+
+.odd_row {
+    background-color: var(--powder-blue);
+}
+
+.even_row {
+    background-color: var(--honeydew);
+}
+br {
+    display: block; /* makes it have a width */
+    content: ""; /* clears default height */
+    margin-top: 1%; /* change this to whatever height you want it */
+}
