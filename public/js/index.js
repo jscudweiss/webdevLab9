@@ -9,6 +9,9 @@ function get_car_object(car, idx) {
     <br>`
 }
 
+
+let carArr =[];
+
 function sortMake(a, b) {
     const makeA = a.make.toUpperCase(); // ignore upper and lowercase
     const makeB = b.make.toUpperCase(); // ignore upper and lowercase
@@ -32,13 +35,12 @@ function sortModel(a, b) {
 }
 
 function sortPrice(a, b) {
-    return (parseInt(a.price) - parseInt(b.price));
+    return (a.price - b.price);
 }
 
 function sortYear(a, b) {
-    return (parseInt(a.year) - parseInt(b.year));
+    return (a.year - b.year);
 }
-
 
 function showList(cars) {
     $('#car_list').empty();
@@ -53,32 +55,49 @@ function showList(cars) {
     });
 }
 
-
 $.get("/get_all_cars")
     .done(function (data) {
-        let carArr = Array.from(data.data);
+        carArr = Array.from(data.data);
         if (data.message === "success") {
-            $('#cars #headers .header').on('click', function () {
-                console.log(carArr);
-                const header = $(this).attr('id');
-                switch (header) {
-                    case "model":
-                        carArr.sort(sortModel);
-                        break;
-                    case "price":
-                        carArr.sort(sortPrice);
-                        break;
-                    case "year":
-                        carArr.sort(sortYear);
-                        break;
-                    default:
-                        carArr.sort(sortMake);
-                }
-                showList(carArr);
-            })
             showList(carArr);
         }
-
     });
 
 
+
+function addNewCar(){
+    location.href = "edit.html";
+}
+
+$('#cars #headers .header').on('click', function () {
+    console.log(carArr);
+    const header = $(this).attr('id');
+    switch (header) {
+        case "model":
+            carArr.sort(sortModel);
+            break;
+        case "price":
+            carArr.sort(sortPrice);
+            break;
+        case "year":
+            carArr.sort(sortYear);
+            break;
+        default:
+            carArr.sort(sortMake);
+    }
+    showList(carArr);
+})
+
+function searchCar() {
+    $.get("/get_cars_by_filters", {
+        search_key: $("#search_box").val(),
+        min_year: $("#min_year").val(),
+        max_year: $("#max_year").val(),
+        min_price: $("#min_price").val(),
+        max_price: $("#max_price").val()
+    }).done((data)=>{
+            carArr = Array.from(data.data);
+            console.log(carArr);
+            showList(carArr);
+        }
+    )}

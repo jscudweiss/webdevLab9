@@ -27,7 +27,7 @@ const carSchema = {
         required: "required"
     },
     year: {
-        type: String,
+        type: Number,
         required: "required"
     },
     color: {
@@ -39,7 +39,7 @@ const carSchema = {
         required: "required"
     },
     price: {
-        type: String,
+        type: Number,
         required: "required"
     }
 }

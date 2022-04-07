@@ -33,3 +33,18 @@ $(document).ready(function () {
             });
     }
 });
+
+function onEdit(){
+    location.href = "/edit.html?car_id=" + car_id;
+}
+function onDelete(){
+    $.post('/delete_car_by_id', {_id:car_id}).done(
+        (data)=>{
+            if(data.message==="success"){
+                location.href="/index.html"
+            }else{
+                console.log(data.message)
+            }
+        }
+    );
+}
