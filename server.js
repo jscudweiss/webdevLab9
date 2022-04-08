@@ -132,7 +132,7 @@ app.get("/get_cars_by_filters", (req, res) => {
     }
     let maxyr = parseInt(req.query.max_year);
     if (!maxyr) {
-        maxyr = 999999;
+        maxyr = 99999;
     }
     let minpr = parseInt(req.query.min_price);
     if (!minpr) {
