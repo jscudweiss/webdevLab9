@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require('body-parser');
 const app = express();
 const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(__dirname + "/public"));
@@ -12,7 +13,7 @@ mongoose.connect('mongodb://localhost:27017/carDB',
         console.log("db connection successful");
     });
 
-const carSchema = {
+const carSchema = new Schema({
     //stock_num,make,model,year,color,url,price
     stock_num: {
         type: String,
@@ -46,7 +47,7 @@ const carSchema = {
         required: "required",
         min: 1,
     }
-}
+})
 
 const Car = mongoose.model('Car', carSchema);
 
@@ -157,13 +158,13 @@ app.get("/get_cars_by_filters", (req, res) => {
     let minpr = parseInt(req.query.min_price);
     let maxpr = parseInt(req.query.max_price);
     if (!minpr) {
-        minpr = Number.NEGATIVE_INFINITY;
+        minpr = 0;
     }
     if (!maxpr) {
         maxpr = Number.POSITIVE_INFINITY;
     }
     if (!minyr) {
-        minyr = Number.NEGATIVE_INFINITY;
+        minyr = 1900;
     }
     if (!maxyr) {
         maxyr = Number.POSITIVE_INFINITY;
@@ -182,10 +183,8 @@ app.get("/get_cars_by_filters", (req, res) => {
             {year: {$lte: maxyr}},
             {
                 $or: [
-                    {stock_num: {$regex: sk}},
                     {make: {$regex: sk}},
                     {model: {$regex: sk}},
-                    {color: {$regex: sk}}
                 ]
             }, (err, data) => {
                 if (err) {

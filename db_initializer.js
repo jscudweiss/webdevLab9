@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const {parse} = require("csv-parse");
-
+const { Schema } = mongoose;
 
 const fs = require('fs');
 
@@ -12,7 +12,7 @@ mongoose.connect('mongodb://localhost:27017/carDB',
         console.log("db connection successful");
     });
 
-const carSchema = {
+const carSchema = new Schema({
     //stock_num,make,model,year,color,url,price
     stock_num: {
         type: String,
@@ -46,7 +46,7 @@ const carSchema = {
         required: "required",
         min: 1,
     }
-}
+})
 
 
 const Car = mongoose.model('Car', carSchema);
