@@ -145,7 +145,7 @@ app.post("/new-car", (req, res) => {
                 res.redirect("/edit.html?error_message=" + err['message'] + "&input=" + JSON.stringify(car));
             } else {
                 console.log(new_car._id);
-                res.redirect("/car_detail.html?car_id=" + new_car._id);
+                res.redirect("/detail.html?car_id=" + new_car._id);
             }
         });
     }
