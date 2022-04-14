@@ -48,7 +48,6 @@ const carSchema = new Schema({
     }
 })
 
-
 const Car = mongoose.model('Car', carSchema);
 
 const csvList = [];

@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require('body-parser');
 const app = express();
 const mongoose = require('mongoose');
-const { Schema } = mongoose;
+const {Schema} = mongoose;
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(__dirname + "/public"));
@@ -137,8 +137,8 @@ app.post("/new-car", (req, res) => {
         )
     } else {
         // create a new car
-        const nm = new Car(car);
-        nm.save((err, new_car) => {
+        const nc = new Car(car);
+        nc.save((err, new_car) => {
             if (err) {
                 console.log(car);
                 // res.send("Database error");
@@ -169,39 +169,38 @@ app.get("/get_cars_by_filters", (req, res) => {
     if (!maxyr) {
         maxyr = Number.POSITIVE_INFINITY;
     }
+    console.log(sk);
     console.log(minyr);
     console.log(maxyr);
     console.log(minpr);
     console.log(maxpr);
-    console.log(sk);
-
     Car.find({
-        $and: [
-            {price: {$gte: minpr}},
-            {price: {$lte: maxpr}},
-            {year: {$gte: minyr}},
-            {year: {$lte: maxyr}},
-            {
-                $or: [
-                    {make: {$regex: sk}},
-                    {model: {$regex: sk}},
-                ]
-            }, (err, data) => {
-                if (err) {
-                    console.log("err" + err);
-                    res.send({
-                        "message": "error: " + err,
-                        "data": data
-                    })
-                } else {
-                    //console.log(data);
-                    console.log("success");
-                    res.send({
-                        "message": "success",
-                        "data": data
-                    })
-                }
+            $and: [
+                {
+                    $or: [
+                        {make: {$regex: sk}},
+                        {model: {$regex: sk}},
+                    ]
+                },
+                {price: {$gte: minpr}},
+                {price: {$lte: maxpr}},
+                {year: {$gte: minyr}},
+                {year: {$lte: maxyr}}]
+        },
+        function (err, data) {
+            if (err) {
+                console.log("err" + err);
+                res.send({
+                    "message": "error: " + err,
+                    "data": data
+                })
+            } else {
+                //console.log(data);
+                console.log("success");
+                res.send({
+                    "message": "success",
+                    "data": data
+                })
             }
-        ]
-    })
+        })
 });
