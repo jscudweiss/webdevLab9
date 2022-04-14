@@ -14,13 +14,38 @@ mongoose.connect('mongodb://localhost:27017/carDB',
 
 const carSchema = {
     //stock_num,make,model,year,color,url,price
-    stock_num: String,
-    make: String,
-    model: String,
-    year: Number,
-    color: String,
-    url: String,
-    price: Number
+    stock_num: {
+        type: String,
+        required: "required",
+        minLength: 5,
+    },
+    make: {
+        type: String,
+        required: "required"
+    },
+    model: {
+        type: String,
+        required: "required"
+    },
+    year: {
+        type: Number,
+        required: "required",
+        min: 1900,
+        max: new Date().getFullYear()
+    },
+    color: {
+        type: String,
+        required: "required"
+    },
+    url: {
+        type: String,
+        required: "required"
+    },
+    price: {
+        type: Number,
+        required: "required",
+        min: 1,
+    }
 }
 
 const Car = mongoose.model('Car', carSchema);
@@ -99,11 +124,12 @@ app.post("/new-car", (req, res) => {
             {runValidators: true},
             (err, info) => {
                 if (err) {
-                    console.log(err);
+                    console.log(car);
                     // res.send("Database error");
-                    res.redirect("/edit.html?error_message=" + err["message"] + "&input=" + car
+                    res.redirect("/edit.html?error_message=" + err['message'] + "&input=" + JSON.stringify(car)
                         + "&carId=" + req.body._id);
                 } else {
+                    console.log(car.id);
                     res.redirect("/detail.html?car_id=" + req.body._id);
                 }
             }
@@ -113,11 +139,11 @@ app.post("/new-car", (req, res) => {
         const nm = new Car(car);
         nm.save((err, new_car) => {
             if (err) {
-                console.log(err);
+                console.log(car);
                 // res.send("Database error");
-                res.redirect("/edit.html?error_message=" + err["message"] + "&input=" + car);
+                res.redirect("/edit.html?error_message=" + err['message'] + "&input=" + JSON.stringify(car));
             } else {
-                console.log(new_car._id)
+                console.log(new_car._id);
                 res.redirect("/car_detail.html?car_id=" + new_car._id);
             }
         });
@@ -127,20 +153,20 @@ app.post("/new-car", (req, res) => {
 app.get("/get_cars_by_filters", (req, res) => {
     const sk = req.query.search_key;
     let minyr = parseInt(req.query.min_year);
-    if (!minyr) {
-        minyr = 0;
-    }
     let maxyr = parseInt(req.query.max_year);
-    if (!maxyr) {
-        maxyr = 99999;
-    }
     let minpr = parseInt(req.query.min_price);
-    if (!minpr) {
-        minpr = 0;
-    }
     let maxpr = parseInt(req.query.max_price);
+    if (!minpr) {
+        minpr = Number.NEGATIVE_INFINITY;
+    }
     if (!maxpr) {
-        maxpr = 99999999;
+        maxpr = Number.POSITIVE_INFINITY;
+    }
+    if (!minyr) {
+        minyr = Number.NEGATIVE_INFINITY;
+    }
+    if (!maxyr) {
+        maxyr = Number.POSITIVE_INFINITY;
     }
     console.log(minyr);
     console.log(maxyr);
@@ -161,14 +187,20 @@ app.get("/get_cars_by_filters", (req, res) => {
                     {model: {$regex: sk}},
                     {color: {$regex: sk}}
                 ]
-            }, (err, data)=>{
-                if(err){
-                    res.send({"message":"error: "+ err,
-                        "data": data})
-                }else {
+            }, (err, data) => {
+                if (err) {
+                    console.log("err" + err);
+                    res.send({
+                        "message": "error: " + err,
+                        "data": data
+                    })
+                } else {
                     //console.log(data);
-                    res.send({"message":"success",
-                        "data": data})
+                    console.log("success");
+                    res.send({
+                        "message": "success",
+                        "data": data
+                    })
                 }
             }
         ]

@@ -10,14 +10,15 @@ const fs = require('fs');
 mongoose.connect('mongodb://localhost:27017/carDB',
     {useNewUrlParser: true}, function () {
         console.log("db connection successful");
-});
+    });
 
 const carSchema = {
+    //stock_num,make,model,year,color,url,price
     stock_num: {
         type: String,
-        required: "required"
+        required: "required",
+        minLength: 5,
     },
-
     make: {
         type: String,
         required: "required"
@@ -28,7 +29,9 @@ const carSchema = {
     },
     year: {
         type: Number,
-        required: "required"
+        required: "required",
+        min: 1900,
+        max: new Date().getFullYear()
     },
     color: {
         type: String,
@@ -40,9 +43,11 @@ const carSchema = {
     },
     price: {
         type: Number,
-        required: "required"
+        required: "required",
+        min: 1,
     }
 }
+
 
 const Car = mongoose.model('Car', carSchema);
 

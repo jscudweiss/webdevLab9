@@ -7,7 +7,6 @@ function fillCar(car) {
     $('#color').val(car.color);
     $('#url').val(car.url);
     $('#price').val(car.price);
-
 }
 
 function onCancel() {
@@ -37,11 +36,20 @@ $('form').on('submit', function () {
     }
 });
 
+
 if (errorMessage) {
-    console.log(car);
+    console.log(errorMessage);
     fillCar(car);
     $('#error_message').text(errorMessage);
+    $('input').each(function (){
+        if(errorMessage.includes($(this).attr('id'))){
+            $(this).addClass('is-invalid text-danger');
+        } else {
+            $(this).removeClass('is-invalid text-danger');
+        }
+    })
 }
+
 
 if (car_id) {
     $.getJSON('/get_car_by_id?car_id=' + car_id)
