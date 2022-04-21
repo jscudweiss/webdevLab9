@@ -3,8 +3,8 @@ let car = {
     "make": "Model",
     "url": "img/placeholder.jpg",
     "year": "2021-01-01",
-    "color": "fuckoff",
-    "price": "fuckthisshit"
+    "color": "yellow",
+    "price": "12213"
 }
 
 function load_car(car) {//stock_num,make,model,year,color,url,price
